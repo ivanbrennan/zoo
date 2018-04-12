@@ -3,7 +3,7 @@ if exists("g:autoloaded_zoo")
 endif
 let g:autoloaded_zoo = 1
 
-func! zoo#toggle()
+func! zoo#toggle() abort
   if s:is_zoomed()
     call s:zoom_out()
   else
@@ -11,7 +11,7 @@ func! zoo#toggle()
   endif
 endf
 
-func! s:zoom_out()
+func! s:zoom_out() abort
   let origin_tab = t:origin_tab
   tabclose
   if tabpagenr() != origin_tab
@@ -19,7 +19,7 @@ func! s:zoom_out()
   endif
 endf
 
-func! s:zoom_in()
+func! s:zoom_in() abort
   if s:in_cmdline()
     echo 'No zoom in command line window' | return
   endif
@@ -35,21 +35,21 @@ func! s:zoom_in()
   endif
 endf
 
-func! s:zoom_in_new_tab()
+func! s:zoom_in_new_tab() abort
   let o = &switchbuf
   set switchbuf&
   exec 'tab sbuffer' bufnr('%')
   let &switchbuf = o
 endf
 
-func! s:is_zoomed()
+func! s:is_zoomed() abort
   return exists('t:origin_tab')
 endf
 
-func! s:in_cmdline()
+func! s:in_cmdline() abort
   return getcmdwintype() != ''
 endf
 
-func! s:only_one_window()
+func! s:only_one_window() abort
   return tabpagewinnr(tabpagenr(), '$') == 1
 endf
