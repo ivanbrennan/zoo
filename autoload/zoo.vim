@@ -4,6 +4,7 @@ endif
 let g:autoloaded_zoo = 1
 
 let s:origin_wins = {}
+let s:NULL_ORIGIN = 0
 
 func! zoo#toggle() abort
   if s:is_zoomed()
@@ -59,17 +60,27 @@ func! s:zoom_out() abort
   endif
 endf
 
-func! zoo#zoomed_win_only() abort
-  return s:only_one_window() && s:get_origin() != 0
+augroup Zoo
+  au!
+  au QuitPre * if s:zoomed_win_only() | call s:quit_origin() | endif
+augroup END
+
+func! s:zoomed_win_only() abort
+  return s:only_one_window() && s:exists(s:get_origin())
+endf
+
+func! s:exists(origin)
+  return a:origin != s:NULL_ORIGIN
 endf
 
 func! s:get_origin() abort
-  return get(s:origin_wins, win_getid())
+  return get(s:origin_wins, win_getid(), s:NULL_ORIGIN)
 endf
 
-func! zoo#quit_origin() abort
+func! s:quit_origin() abort
   let og = s:get_origin()
-  if og != 0
+
+  if s:exists(og)
     let i = win_getid()
     call win_gotoid(og) | quit
     call win_gotoid(i)
