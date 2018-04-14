@@ -11,12 +11,8 @@ func! zoo#toggle() abort
   endif
 endf
 
-func! s:zoom_out() abort
-  let origin_tab = t:origin_tab
-  tabclose
-  if tabpagenr() != origin_tab
-    exec 'tabnext ' origin_tab
-  endif
+func! s:is_zoomed() abort
+  return exists('t:origin_tab')
 endf
 
 func! s:zoom_in() abort
@@ -35,6 +31,14 @@ func! s:zoom_in() abort
   endif
 endf
 
+func! s:in_cmdline() abort
+  return getcmdwintype() != ''
+endf
+
+func! s:only_one_window() abort
+  return tabpagewinnr(tabpagenr(), '$') == 1
+endf
+
 func! s:zoom_in_new_tab() abort
   let o = &switchbuf
   set switchbuf&
@@ -42,14 +46,10 @@ func! s:zoom_in_new_tab() abort
   let &switchbuf = o
 endf
 
-func! s:is_zoomed() abort
-  return exists('t:origin_tab')
-endf
-
-func! s:in_cmdline() abort
-  return getcmdwintype() != ''
-endf
-
-func! s:only_one_window() abort
-  return tabpagewinnr(tabpagenr(), '$') == 1
+func! s:zoom_out() abort
+  let origin_tab = t:origin_tab
+  tabclose
+  if tabpagenr() != origin_tab
+    exec 'tabnext ' origin_tab
+  endif
 endf
