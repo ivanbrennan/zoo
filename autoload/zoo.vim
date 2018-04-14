@@ -36,7 +36,7 @@ func! s:in_cmdline() abort
 endf
 
 func! s:only_one_window() abort
-  return tabpagewinnr(tabpagenr(), '$') == 1
+  return winnr('$') == 1
 endf
 
 func! s:zoom_in_new_tab() abort
